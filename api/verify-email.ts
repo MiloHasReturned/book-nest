@@ -1,5 +1,3 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node'
-
 type EmailVerificationResult = {
   deliverable: boolean
   disposable: boolean
@@ -10,7 +8,7 @@ const API_URL =
   process.env.EMAIL_VERIFY_API_URL ?? 'https://api.validemail.io/v1/verify'
 const API_KEY = process.env.EMAIL_VERIFY_API_KEY
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
   }
