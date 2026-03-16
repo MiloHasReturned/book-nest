@@ -1,6 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useEffect, useState } from 'react'
-import { verifyEmailClient, verifyEmailDebug } from '#/lib/emailVerification'
+import { useState } from 'react'
 
 export const Route = createFileRoute('/about')({
   component: About,
@@ -15,13 +14,6 @@ function About() {
     | { status: 'error'; message: string }
   >({ status: 'idle' })
   const [isPending, setIsPending] = useState(false)
-  const [debugInfo, setDebugInfo] = useState<{ hasKey: boolean; apiUrl: string }>()
-
-  useEffect(() => {
-    verifyEmailDebug()
-      .then(setDebugInfo)
-      .catch(() => setDebugInfo(undefined))
-  }, [])
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
@@ -34,11 +26,26 @@ function About() {
     setResult({ status: 'idle' })
     setIsPending(true)
     try {
-      const response = await verifyEmailClient(trimmed)
-      if (!response.deliverable || response.disposable) {
+      const response = await fetch('/api/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: trimmed }),
+      })
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string }
+        throw new Error(data.error ?? `Verify failed: ${response.status}`)
+      }
+
+      const data = (await response.json()) as {
+        deliverable: boolean
+        disposable: boolean
+        reason: string
+      }
+
+      if (!data.deliverable || data.disposable) {
         setResult({
           status: 'warn',
-          message: response.reason || 'undeliverable or disposable',
+          message: data.reason || 'undeliverable or disposable',
         })
         return
       }
@@ -106,11 +113,6 @@ function About() {
         {result.status === 'idle' && isPending && (
           <p className="mt-3 text-sm text-[var(--sea-ink-soft)]">
             Sending to Sniffmail…
-          </p>
-        )}
-        {debugInfo && (
-          <p className="mt-3 text-xs text-[var(--sea-ink-soft)]">
-            Debug: key loaded={debugInfo.hasKey ? 'yes' : 'no'}, apiUrl={debugInfo.apiUrl}
           </p>
         )}
       </section>
