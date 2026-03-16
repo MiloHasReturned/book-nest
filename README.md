@@ -42,10 +42,10 @@ Server-side proxy for email verification is scaffolded at `src/lib/emailVerifica
 1. Add env vars in Vercel project settings:
    - `EMAIL_VERIFY_API_KEY`
    - `EMAIL_VERIFY_API_URL` (e.g., `https://api.sniffmail.io/verify`)
-2. Vercel will use `vercel.json`:
+2. Vercel detection (no `vercel.json` needed):
    - Install: `bun install`
    - Build: `bun run build`
-   - Output: `dist`
+   - Output: `dist/client` (set this in Project → Settings → Build & Output)
 3. Connect the repo in Vercel and deploy (Hobby tier is fine).
 
 ## Structure
