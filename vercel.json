@@ -1,6 +1,14 @@
 {
+  "version": 2,
   "buildCommand": "bun run build",
   "installCommand": "bun install",
-  "outputDirectory": "dist/client",
-  "framework": "vite"
+  "builds": [
+    { "src": "dist/server/server.js", "use": "@vercel/node" },
+    { "src": "dist/client/**/*", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/assets/(.*)", "dest": "dist/client/assets/$1" },
+    { "src": "/(favicon\\.ico|logo192\\.png|logo512\\.png|manifest\\.json|robots\\.txt)", "dest": "dist/client/$1" },
+    { "src": "/.*", "dest": "dist/server/server.js" }
+  ]
 }
