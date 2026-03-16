@@ -3,7 +3,7 @@
   "buildCommand": "bun run build",
   "installCommand": "bun install",
   "builds": [
-    { "src": "api/**/*", "use": "@vercel/node" },
+    { "src": "api/**/*", "use": "@vercel/node@4.0.0" },
     { "src": "dist/client/**/*", "use": "@vercel/static" }
   ],
   "routes": [
