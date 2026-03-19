@@ -1,5 +1,7 @@
 // Vercel Node handler that forwards to the TanStack Start server (fetch-based)
-const { default: server } = require('../dist/server/server.js')
+const path = require('path')
+const serverPath = path.join(process.cwd(), 'dist', 'server', 'server.js')
+const server = require(serverPath).default || require(serverPath)
 
 module.exports = async function handler(req, res) {
   try {
