@@ -2,15 +2,6 @@
   "version": 2,
   "buildCommand": "bun run build",
   "installCommand": "bun install",
-  "functions": {
-    "api/ssr.js": {
-      "runtime": "nodejs18.x",
-      "includeFiles": "dist/server/**"
-    },
-    "api/verify-email.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "builds": [
     { "src": "api/ssr.js", "use": "@vercel/node@4.0.0" },
     { "src": "api/verify-email.ts", "use": "@vercel/node@4.0.0" },
