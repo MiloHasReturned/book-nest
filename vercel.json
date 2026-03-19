@@ -1,13 +1,9 @@
 {
-  "version": 2,
   "buildCommand": "bun run build",
   "installCommand": "bun install",
-  "builds": [
-    { "src": "dist/client/**/*", "use": "@vercel/static" },
-    { "src": "api/**/*", "use": "@vercel/node@4.0.0" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "outputDirectory": "dist/client",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
