@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { verifyEmailClient } from '#/lib/emailVerification'
 
 export const Route = createFileRoute('/about')({
   component: About,
@@ -26,21 +27,7 @@ function About() {
     setResult({ status: 'idle' })
     setIsPending(true)
     try {
-      const response = await fetch('/api/verify-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: trimmed }),
-      })
-      if (!response.ok) {
-        const data = (await response.json().catch(() => ({}))) as { error?: string }
-        throw new Error(data.error ?? `Verify failed: ${response.status}`)
-      }
-
-      const data = (await response.json()) as {
-        deliverable: boolean
-        disposable: boolean
-        reason: string
-      }
+      const data = await verifyEmailClient(trimmed)
 
       if (!data.deliverable || data.disposable) {
         setResult({
